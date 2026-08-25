@@ -1,0 +1,4 @@
+#! /bin/bash
+
+echo "This is newly created file"
+echo "Welcome to SheLL SCRIPTING"
