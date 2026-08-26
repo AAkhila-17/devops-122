@@ -1,0 +1,84 @@
+// @ts-check
+import eslintReact from "@eslint-react/eslint-plugin";
+import eslint from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import eslintConfigPrettier from "eslint-config-prettier";
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
+
+const jsFiles = ["**/*.{js,mjs}", "**/.*.{js,mjs}"];
+
+export default defineConfig(
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "sanity/generated/**",
+    ],
+  },
+  eslint.configs.recommended,
+  {
+    rules: {
+      curly: ["error", "all"],
+      "no-console": "error",
+    },
+  },
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
+  {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          fixStyle: "inline-type-imports",
+          prefer: "type-imports",
+        },
+      ],
+      "@typescript-eslint/require-await": "off",
+    },
+  },
+  {
+    plugins: {
+      "@stylistic": stylistic,
+    },
+    rules: {
+      "@stylistic/padding-line-between-statements": [
+        "error",
+        { blankLine: "always", prev: "*", next: "return" },
+        { blankLine: "always", prev: "directive", next: "*" },
+        { blankLine: "never", prev: "directive", next: "directive" },
+        { blankLine: "always", prev: "import", next: "*" },
+        { blankLine: "never", prev: "import", next: "import" },
+      ],
+      "@stylistic/spaced-comment": "error",
+      "@stylistic/jsx-self-closing-comp": "error",
+    },
+  },
+  nextVitals,
+  {
+    extends: [
+      eslintReact.configs["strict-type-checked"],
+      eslintReact.configs["disable-conflict-eslint-plugin-react"],
+      eslintReact.configs["disable-conflict-eslint-plugin-react-hooks"],
+    ],
+  },
+  {
+    files: jsFiles,
+    extends: [
+      tseslint.configs.disableTypeChecked,
+      eslintReact.configs["disable-type-checked"],
+    ],
+  },
+  eslintConfigPrettier,
+);
